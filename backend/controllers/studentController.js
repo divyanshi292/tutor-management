@@ -1,8 +1,19 @@
 const Student = require("../models/Student");
 
+const editableFields = ["name", "section", "attendance", "status", "image"];
+
+const pickStudentFields = (body) =>
+  Object.fromEntries(
+    editableFields
+      .filter((field) => Object.hasOwn(body, field))
+      .map((field) => [field, body[field]])
+  );
+
 const getStudents = async (req, res, next) => {
   try {
-    return res.json(await Student.find());
+    return res.json(
+      await Student.find({ owner: req.user._id }).sort({ createdAt: -1 })
+    );
   } catch (error) {
     return next(error);
   }
@@ -10,7 +21,10 @@ const getStudents = async (req, res, next) => {
 
 const createStudent = async (req, res, next) => {
   try {
-    const student = await Student.create(req.body);
+    const student = await Student.create({
+      ...pickStudentFields(req.body),
+      owner: req.user._id,
+    });
     return res.status(201).json(student);
   } catch (error) {
     return next(error);
@@ -19,9 +33,9 @@ const createStudent = async (req, res, next) => {
 
 const updateStudent = async (req, res, next) => {
   try {
-    const student = await Student.findByIdAndUpdate(
-      req.params.id,
-      req.body,
+    const student = await Student.findOneAndUpdate(
+      { _id: req.params.id, owner: req.user._id },
+      pickStudentFields(req.body),
       { new: true, runValidators: true }
     );
 
@@ -37,7 +51,10 @@ const updateStudent = async (req, res, next) => {
 
 const deleteStudent = async (req, res, next) => {
   try {
-    const student = await Student.findByIdAndDelete(req.params.id);
+    const student = await Student.findOneAndDelete({
+      _id: req.params.id,
+      owner: req.user._id,
+    });
 
     if (!student) {
       return res.status(404).json({ message: "Student not found" });
