@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { FiEye, FiEyeOff, FiLock, FiMail, FiUser } from "react-icons/fi";
-import { PiGraduationCapFill } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
-import loginImage from "../assets/login-transparent.png";
+import loginImage from "../assets/login.png";
+import logoImage from "../assets/logo.png";
 import { useAuth } from "../hooks/useAuth";
 
 function Login() {
@@ -36,12 +36,14 @@ function Login() {
       <section className="login-showcase-panel" aria-label="Tutor management introduction">
         <div className="login-showcase-content">
           <div className="login-logo-row">
-            <span className="login-logo-icon" aria-hidden="true">
-              <PiGraduationCapFill />
-            </span>
+            <img
+              src={logoImage}
+              alt="TutorDesk logo"
+              className="login-logo-image"
+            />
             <div>
               <p className="login-logo-name">
-                Tutor<span>Manage</span>
+                Tutor<span>Desk</span>
               </p>
               <p className="login-logo-tagline">Tutor Management System</p>
             </div>
