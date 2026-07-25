@@ -2106,7 +2106,7 @@ body.dark .login-input-wrap {
   }
 
   .login-showcase-copy {
-    margin-top: clamp(28px, 5vh, 52px);
+    margin-top: clamp(48px, 7vh, 72px);
   }
 
   .login-showcase-copy h1 {
@@ -2131,5 +2131,20 @@ body.dark .login-input-wrap {
 
   .login-access-panel .login-form-heading h2 {
     font-size: clamp(26px, 2.2vw, 32px);
+  }
+
+  .login-access-panel .login-card {
+    flex-basis: 480px;
+    max-width: 480px;
+    min-height: min(600px, calc(100dvh - 48px));
+    padding-right: 42px;
+    padding-left: 42px;
+    box-sizing: border-box;
+  }
+}
+
+@media (min-width: 821px) and (min-height: 761px) {
+  .login-showcase-content {
+    padding-top: max(64px, calc((100dvh - 600px) / 2 + 48px));
   }
 }
