@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { AttendanceRow } from "../components";
+import { AttendanceRow, ConfirmModal, FeedbackAlert } from "../components";
 import {
   getAttendanceByDate,
   saveAttendance,
@@ -12,7 +12,10 @@ function Attendance({ students = [], setStudents }) {
   const [attendanceMap, setAttendanceMap] = useState({});
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
-  const [savingMsg, setSavingMsg] = useState("");
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [feedback, setFeedback] = useState({ type: "", text: "" });
+  const [pendingDateSwitch, setPendingDateSwitch] = useState(null);
 
   const isToday = selectedDate === getTodayDateString();
 
@@ -47,6 +50,7 @@ function Attendance({ students = [], setStudents }) {
           });
 
           setAttendanceMap(map);
+          setHasUnsavedChanges(false);
         }
       })
       .catch((err) => {
@@ -63,72 +67,90 @@ function Attendance({ students = [], setStudents }) {
     };
   }, [selectedDate, students, isToday]);
 
-  const handleStatusChange = async (studentId, newStatus) => {
-    // Optimistic local update
-    const previousMap = { ...attendanceMap };
-    const updatedMap = {
-      ...attendanceMap,
+  // Mark student locally without auto-saving directly
+  const handleStatusChange = (studentId, newStatus) => {
+    setAttendanceMap((prev) => ({
+      ...prev,
       [studentId]: {
-        ...(attendanceMap[studentId] || {}),
+        ...(prev[studentId] || {}),
         status: newStatus,
       },
-    };
-    setAttendanceMap(updatedMap);
-
-    if (isToday && setStudents) {
-      setStudents(
-        students.map((s) =>
-          s._id === studentId ? { ...s, status: newStatus } : s
-        )
-      );
-    }
-
-    try {
-      await saveAttendance({
-        date: selectedDate,
-        studentId,
-        status: newStatus,
-      });
-      setSavingMsg(`Saved for ${selectedDate}`);
-      setTimeout(() => setSavingMsg(""), 2500);
-    } catch (err) {
-      console.error("Failed to save attendance:", err);
-      setAttendanceMap(previousMap);
-    }
+    }));
+    setHasUnsavedChanges(true);
   };
 
-  const handleBatchMark = async (status) => {
-    const records = students.map((s) => ({
-      studentId: s._id,
-      status,
-    }));
-
-    const updatedMap = {};
+  // Mark all students locally without auto-saving directly
+  const handleBatchMark = (status) => {
+    const updatedMap = { ...attendanceMap };
     students.forEach((s) => {
-      updatedMap[s._id] = { status, notes: "" };
+      updatedMap[s._id] = {
+        ...(updatedMap[s._id] || {}),
+        status,
+      };
     });
     setAttendanceMap(updatedMap);
+    setHasUnsavedChanges(true);
+  };
 
-    if (isToday && setStudents) {
-      setStudents(students.map((s) => ({ ...s, status })));
-    }
+  // Explicit save action triggered by the button on top
+  const handleSaveAttendance = async () => {
+    if (students.length === 0) return true;
+    setIsSaving(true);
+    setFeedback({ type: "", text: "" });
+
+    const records = Object.entries(attendanceMap).map(([studentId, data]) => ({
+      studentId,
+      status: data.status,
+      notes: data.notes || "",
+    }));
 
     try {
       await saveAttendance({
         date: selectedDate,
         records,
       });
-      setSavingMsg(`Marked all ${status} for ${selectedDate}`);
-      setTimeout(() => setSavingMsg(""), 3000);
+
+      if (isToday && setStudents) {
+        setStudents(
+          students.map((s) => ({
+            ...s,
+            status: attendanceMap[s._id]?.status || s.status,
+          }))
+        );
+      }
+
+      setHasUnsavedChanges(false);
+      setFeedback({
+        type: "success",
+        text: `Attendance for ${selectedDate} saved successfully!`,
+      });
+      setTimeout(() => setFeedback({ type: "", text: "" }), 4000);
+      return true;
     } catch (err) {
-      console.error("Batch attendance update failed:", err);
+      console.error("Failed to save attendance:", err);
+      setFeedback({
+        type: "error",
+        text: "Failed to save attendance records. Please try again.",
+      });
+      return false;
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const requestDateChange = (newDate) => {
+    if (hasUnsavedChanges) {
+      setPendingDateSwitch(newDate);
+    } else {
+      setSelectedDate(newDate);
     }
   };
 
   const changeDateByDays = (delta) => {
     const cur = new Date(selectedDate);
     cur.setDate(cur.getDate() + delta);
-    setSelectedDate(cur.toISOString().slice(0, 10));
+    const nextDate = cur.toISOString().slice(0, 10);
+    requestDateChange(nextDate);
   };
 
   // Metrics for selected date
@@ -154,58 +176,84 @@ function Attendance({ students = [], setStudents }) {
 
   return (
     <div className="attendance-page">
-      {/* Title & Date Controls */}
+      <FeedbackAlert
+        type={feedback.type}
+        message={feedback.text}
+        onClose={() => setFeedback({ type: "", text: "" })}
+      />
+
+      {/* Title & Date Controls & Primary Save Button on Top */}
       <div className="attendance-header-bar">
         <div>
           <h1 className="attendance-title" style={{ marginBottom: "6px" }}>
             Attendance Tracker
           </h1>
           <p style={{ color: "var(--butter-muted, #776846)", fontSize: "14px" }}>
-            Track and log daily attendance sessions with real-time sync.
+            Mark student presence below, then click &quot;Save Attendance&quot; to commit changes.
           </p>
         </div>
 
-        {/* Date Selector */}
-        <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
-          <button
-            type="button"
-            className="action-btn"
-            style={{ padding: "8px 12px", fontSize: "13px" }}
-            onClick={() => changeDateByDays(-1)}
-          >
-            ← Prev Day
-          </button>
+        {/* Top Controls: Date Selector + Primary Save Attendance Button */}
+        <div style={{ display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
+          {/* Date Selector */}
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <button
+              type="button"
+              className="action-btn"
+              style={{ padding: "8px 12px", fontSize: "13px" }}
+              onClick={() => changeDateByDays(-1)}
+            >
+              ← Prev
+            </button>
 
-          <div className="attendance-date-picker-wrap">
-            <span role="img" aria-label="calendar">📅</span>
-            <input
-              type="date"
-              value={selectedDate}
-              onChange={(e) => setSelectedDate(e.target.value)}
-            />
-            {isToday && (
-              <span
-                style={{
-                  fontSize: "11px",
-                  background: "var(--butter-soft, #fff3c4)",
-                  color: "#b88915",
-                  fontWeight: 700,
-                  padding: "2px 6px",
-                  borderRadius: "6px",
-                }}
-              >
-                Today
-              </span>
-            )}
+            <div className="attendance-date-picker-wrap">
+              <span role="img" aria-label="calendar">📅</span>
+              <input
+                type="date"
+                value={selectedDate}
+                onChange={(e) => requestDateChange(e.target.value)}
+              />
+              {isToday && (
+                <span
+                  style={{
+                    fontSize: "11px",
+                    background: "var(--butter-soft, #fff3c4)",
+                    color: "#b88915",
+                    fontWeight: 700,
+                    padding: "2px 6px",
+                    borderRadius: "6px",
+                  }}
+                >
+                  Today
+                </span>
+              )}
+            </div>
+
+            <button
+              type="button"
+              className="action-btn"
+              style={{ padding: "8px 12px", fontSize: "13px" }}
+              onClick={() => changeDateByDays(1)}
+            >
+              Next →
+            </button>
           </div>
 
+          {/* Primary Save Attendance Button on Top */}
           <button
             type="button"
-            className="action-btn"
-            style={{ padding: "8px 12px", fontSize: "13px" }}
-            onClick={() => changeDateByDays(1)}
+            className={`attendance-save-btn ${hasUnsavedChanges ? "unsaved" : "saved"}`}
+            onClick={handleSaveAttendance}
+            disabled={isSaving || students.length === 0}
+            title={hasUnsavedChanges ? "Click to save all marked attendance" : "All changes are saved"}
           >
-            Next Day →
+            {isSaving ? (
+              <>⏳ Saving...</>
+            ) : hasUnsavedChanges ? (
+              <>💾 Save Attendance *</>
+            ) : (
+              <>✓ Attendance Saved</>
+            )}
           </button>
         </div>
       </div>
@@ -233,6 +281,49 @@ function Attendance({ students = [], setStudents }) {
           <strong style={{ color: "#b88915" }}>{attendanceRate}%</strong>
         </div>
       </div>
+
+      {/* Unsaved Changes Notice Banner */}
+      {hasUnsavedChanges && (
+        <div
+          style={{
+            margin: "0 0 20px 0",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            background: "linear-gradient(135deg, #fffbeb 0%, #fff1f2 100%)",
+            border: "1.5px solid rgba(251, 113, 133, 0.4)",
+            borderRadius: "14px",
+            padding: "12px 18px",
+            boxShadow: "0 4px 14px rgba(244, 63, 94, 0.1)",
+            animation: "modalFadeIn 0.3s ease",
+            flexWrap: "wrap",
+            gap: "10px",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "10px", color: "#9f1239", fontSize: "13.5px", fontWeight: 600 }}>
+            <span style={{ fontSize: "18px" }}>⚠️</span>
+            <span>You have unsaved attendance changes for {selectedDate}. Click &quot;Save Attendance&quot; above to commit.</span>
+          </div>
+          <button
+            type="button"
+            onClick={handleSaveAttendance}
+            disabled={isSaving}
+            style={{
+              background: "linear-gradient(135deg, #fb7185 0%, #f43f5e 100%)",
+              color: "white",
+              border: "none",
+              padding: "7px 18px",
+              borderRadius: "10px",
+              fontWeight: 700,
+              fontSize: "13px",
+              cursor: "pointer",
+              boxShadow: "0 2px 10px rgba(244, 63, 94, 0.3)",
+            }}
+          >
+            {isSaving ? "Saving..." : "Save Now"}
+          </button>
+        </div>
+      )}
 
       {/* Action Controls & Search */}
       <div
@@ -283,17 +374,6 @@ function Attendance({ students = [], setStudents }) {
         </div>
 
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          {savingMsg && (
-            <span
-              style={{
-                fontSize: "13px",
-                color: "#16a34a",
-                fontWeight: 600,
-              }}
-            >
-              ✓ {savingMsg}
-            </span>
-          )}
           <input
             type="text"
             placeholder="Search students..."
@@ -350,6 +430,29 @@ function Attendance({ students = [], setStudents }) {
           })
         )}
       </div>
+
+      {/* Aesthetic Modal when switching dates with unsaved changes */}
+      <ConfirmModal
+        isOpen={Boolean(pendingDateSwitch)}
+        title="Unsaved Attendance"
+        message={`You have unsaved attendance marks for ${selectedDate}. If you navigate to ${pendingDateSwitch} without saving, your changes will be discarded.`}
+        confirmText="Save & Continue"
+        cancelText="Discard Changes"
+        type="warning"
+        loading={isSaving}
+        onConfirm={async () => {
+          const ok = await handleSaveAttendance();
+          if (ok) {
+            setSelectedDate(pendingDateSwitch);
+            setPendingDateSwitch(null);
+          }
+        }}
+        onCancel={() => {
+          setHasUnsavedChanges(false);
+          setSelectedDate(pendingDateSwitch);
+          setPendingDateSwitch(null);
+        }}
+      />
     </div>
   );
 }

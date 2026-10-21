@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FeedbackAlert, StudentCard } from "../components";
+import { ConfirmModal, FeedbackAlert, StudentCard } from "../components";
 import {
   createStudent,
   deleteStudent,
@@ -30,6 +30,8 @@ function Students({ students, refreshStudents }) {
   const [sortOrder, setSortOrder] = useState("asc");
   const [feedback, setFeedback] = useState({ type: "", text: "" });
   const [submitting, setSubmitting] = useState(false);
+  const [studentToDelete, setStudentToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Extract unique sections for filter dropdown
   const sections = Array.from(
@@ -115,18 +117,23 @@ function Students({ students, refreshStudents }) {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const handleDelete = async (student) => {
-    if (!window.confirm(`Are you sure you want to remove ${student.name}?`)) {
-      return;
-    }
+  const handleDelete = (student) => {
+    setStudentToDelete(student);
+  };
 
+  const executeDelete = async () => {
+    if (!studentToDelete) return;
+    setIsDeleting(true);
     try {
-      await deleteStudent(student._id);
-      showFeedback("success", `Removed student "${student.name}".`);
+      await deleteStudent(studentToDelete._id);
+      showFeedback("success", `Removed student "${studentToDelete.name}".`);
       await refreshStudents();
     } catch (error) {
       console.error("Delete student error:", error);
       showFeedback("error", "Failed to delete student record.");
+    } finally {
+      setIsDeleting(false);
+      setStudentToDelete(null);
     }
   };
 
@@ -483,6 +490,23 @@ function Students({ students, refreshStudents }) {
           ))
         )}
       </div>
+
+      {/* Aesthetic Delete Confirmation Modal */}
+      <ConfirmModal
+        isOpen={Boolean(studentToDelete)}
+        title="Remove Student?"
+        message={
+          studentToDelete
+            ? `Are you sure you want to remove "${studentToDelete.name}"? This action will permanently remove their profile and all attendance records.`
+            : ""
+        }
+        confirmText="Remove Student"
+        cancelText="Cancel"
+        type="danger"
+        loading={isDeleting}
+        onConfirm={executeDelete}
+        onCancel={() => setStudentToDelete(null)}
+      />
     </div>
   );
 }
