@@ -1,6 +1,19 @@
 const Student = require("../models/Student");
 
-const editableFields = ["name", "section", "attendance", "status", "image"];
+const editableFields = [
+  "name",
+  "section",
+  "email",
+  "phone",
+  "parentName",
+  "parentPhone",
+  "feeStatus",
+  "monthlyFee",
+  "notes",
+  "attendance",
+  "status",
+  "image",
+];
 
 const pickStudentFields = (body) =>
   Object.fromEntries(
@@ -36,7 +49,7 @@ const updateStudent = async (req, res, next) => {
     const student = await Student.findOneAndUpdate(
       { _id: req.params.id, owner: req.user._id },
       pickStudentFields(req.body),
-      { new: true, runValidators: true }
+      { returnDocument: "after", runValidators: true }
     );
 
     if (!student) {

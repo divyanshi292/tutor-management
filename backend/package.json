@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "migrate:student-owners": "node scripts/migrateStudentOwners.js"
+    "migrate:student-owners": "node scripts/migrateStudentOwners.js",
+    "reset-password": "node scripts/resetPassword.js"
   },
   "keywords": [],
   "author": "",

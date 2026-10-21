@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { useAuth } from "./hooks/useAuth";
 import { useStudents } from "./hooks/useStudents";
@@ -11,27 +10,10 @@ import Settings from "./pages/Settings";
 import StudentDetails from "./pages/StudentDetails";
 import Students from "./pages/Students";
 
-const defaultProfile = {
-  tutorName: "Divyanshi Agarwal",
-  email: "divyanshi@gmail.com",
-  phone: "+91 9876543210",
-  subject: "Mathematics",
-  experience: "3 Years",
-  location: "Ajmer, Rajasthan",
-};
-
 function App() {
-  const { isLoggedIn } = useAuth();
-  const { students, setStudents, refreshStudents } =
+  const { isLoggedIn, user, updateUserProfile } = useAuth();
+  const { students, setStudents, refreshStudents, loading: studentsLoading } =
     useStudents(isLoggedIn);
-  const [profileData, setProfileData] = useState(() => {
-    const savedProfile = localStorage.getItem("profileData");
-    return savedProfile ? JSON.parse(savedProfile) : defaultProfile;
-  });
-
-  useEffect(() => {
-    localStorage.setItem("profileData", JSON.stringify(profileData));
-  }, [profileData]);
 
   const protectedDashboard = isLoggedIn ? (
     <Dashboard />
@@ -72,18 +54,23 @@ function App() {
         />
         <Route
           path="students/:id"
-          element={<StudentDetails students={students} />}
+          element={
+            <StudentDetails
+              students={students}
+              loading={studentsLoading}
+            />
+          }
         />
         <Route
           path="profile"
-          element={<Profile profileData={profileData} />}
+          element={<Profile user={user} students={students} />}
         />
         <Route
           path="settings"
           element={
             <Settings
-              profileData={profileData}
-              setProfileData={setProfileData}
+              user={user}
+              updateUserProfile={updateUserProfile}
             />
           }
         />

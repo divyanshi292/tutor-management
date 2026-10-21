@@ -5,102 +5,66 @@ import { useAuth } from "../hooks/useAuth";
 
 
 function Dashboard() {
-  const [menuOpen, setMenuOpen] =
-  useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
 
-    const navigate = useNavigate();
-    const { logout } = useAuth();
-    const handleLogout = () => {
-      logout();
-      navigate("/login");
-   };
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
+  const closeMenu = () => setMenuOpen(false);
 
   return (
     <div className="dashboard-page">
-
       {/* Sidebar */}
-
       <button
-  className="menu-btn"
-  onClick={() =>
-    setMenuOpen(!menuOpen)
-  }
->
-  ☰
-</button>
+        className="menu-btn"
+        aria-label="Toggle navigation menu"
+        onClick={() => setMenuOpen(!menuOpen)}
+      >
+        ☰
+      </button>
 
-      <aside
-  className={
-    menuOpen
-      ? "dashboard-sidebar active"
-      : "dashboard-sidebar"
-  }
->
+      <aside className={menuOpen ? "dashboard-sidebar active" : "dashboard-sidebar"}>
+        {/* Profile */}
+        <div className="sidebar-profile">
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/6997/6997662.png"
+            alt="Tutor avatar"
+            className="sidebar-avatar"
+          />
+          <h3>{user?.name || "Tutor"}</h3>
+          <p>{user?.subject ? `${user.subject} Tutor` : "Tutor Panel"}</p>
+        </div>
 
-  {/* Profile */}
+        {/* Links */}
+        <NavLink to="/dashboard" end className="dashboard-link" onClick={closeMenu}>
+          📊 Dashboard
+        </NavLink>
 
-  <div className="sidebar-profile">
+        <NavLink to="/dashboard/students" className="dashboard-link" onClick={closeMenu}>
+          🎓 Students
+        </NavLink>
 
-    <img
-      src="https://cdn-icons-png.flaticon.com/512/6997/6997662.png"
-      alt="Tutor"
-      className="sidebar-avatar"
-    />
+        <NavLink to="/dashboard/attendance" className="dashboard-link" onClick={closeMenu}>
+          📅 Attendance
+        </NavLink>
 
-    <h3>Divyanshi</h3>
+        <NavLink to="/dashboard/profile" className="dashboard-link" onClick={closeMenu}>
+          👤 Profile
+        </NavLink>
 
-    <p>Tutor Panel</p>
+        <NavLink to="/dashboard/settings" className="dashboard-link" onClick={closeMenu}>
+          ⚙ Settings
+        </NavLink>
 
-  </div>
-
-  {/* Links */}
-
-  <NavLink
-  to="/dashboard"
-  className="dashboard-link"
->
-  📊 Dashboard
-</NavLink>
-
-<NavLink
-  to="/dashboard/students"
-  className="dashboard-link"
->
-  🎓 Students
-</NavLink>
-
-<NavLink
-  to="/dashboard/attendance"
-  className="dashboard-link"
->
-  📅 Attendance
-</NavLink>
-
-<NavLink
-  to="/dashboard/profile"
-  className="dashboard-link"
->
-  👤 Profile
-</NavLink>
-
-<NavLink
-  to="/dashboard/settings"
-  className="dashboard-link"
->
-  ⚙ Settings
-</NavLink>
-
-  {/* Logout */}
-
-  <button
-    className="logout-sidebar-btn"
-    onClick={handleLogout}
-  >
-    Logout
-  </button>
-
-</aside>
+        {/* Logout */}
+        <button className="logout-sidebar-btn" onClick={handleLogout}>
+          Logout
+        </button>
+      </aside>
       
 
       {/* Main Content */}

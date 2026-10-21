@@ -120,10 +120,21 @@ body {
 .absent-badge {
   background-color: #ef4444;
 }
+
+.late-badge {
+  background-color: #f59e0b;
+}
+
 .present-badge,
-.absent-badge {
+.absent-badge,
+.late-badge {
   display: inline-block;
-  margin-top: 12px;
+  margin-top: 8px;
+  padding: 6px 14px;
+  border-radius: 10px;
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
 }
 
 /* Button */
@@ -142,6 +153,116 @@ body {
 
 .attendance-btn:hover {
   background-color: #0284c7;
+}
+
+.attendance-header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.attendance-date-picker-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: white;
+  padding: 8px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(241, 223, 164, 0.8);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+
+.attendance-date-picker-wrap input[type="date"] {
+  border: none;
+  font-family: inherit;
+  font-size: 14px;
+  color: #222936;
+  background: transparent;
+  outline: none;
+  cursor: pointer;
+}
+
+.attendance-summary-bar {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.attendance-summary-chip {
+  background: white;
+  padding: 12px 18px;
+  border-radius: 12px;
+  border: 1px solid rgba(241, 223, 164, 0.7);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  font-size: 14px;
+  color: #222936;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.attendance-summary-chip strong {
+  font-size: 18px;
+  color: #b88915;
+}
+
+.status-pill-group {
+  display: inline-flex;
+  gap: 6px;
+  background: #f1f5f9;
+  padding: 4px;
+  border-radius: 10px;
+}
+
+.status-pill-btn {
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  background: transparent;
+  color: #64748b;
+  transition: all 0.2s ease;
+}
+
+.status-pill-btn.active-present {
+  background: #22c55e;
+  color: white;
+  box-shadow: 0 2px 6px rgba(34, 197, 94, 0.3);
+}
+
+.status-pill-btn.active-absent {
+  background: #ef4444;
+  color: white;
+  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);
+}
+
+.status-pill-btn.active-late {
+  background: #f59e0b;
+  color: white;
+  box-shadow: 0 2px 6px rgba(245, 158, 11, 0.3);
+}
+
+body.dark .attendance-card,
+body.dark .attendance-date-picker-wrap,
+body.dark .attendance-summary-chip {
+  background: #25221b;
+  border-color: rgba(241, 223, 164, 0.2);
+  color: #f1dfa4;
+}
+
+body.dark .attendance-date-picker-wrap input[type="date"] {
+  color: #f1dfa4;
+  color-scheme: dark;
+}
+
+body.dark .status-pill-group {
+  background: #1b1915;
 }
 
 
@@ -1900,6 +2021,76 @@ body.dark .login-card input {
 .login-card .login-submit-button:hover {
   background: linear-gradient(90deg, #dba500, #edb100);
   color: #2f2919;
+}
+
+.auth-tab-group {
+  display: flex;
+  background: var(--butter-soft);
+  padding: 4px;
+  border-radius: 14px;
+  margin-bottom: 24px;
+  gap: 4px;
+  border: 1px solid rgba(241, 223, 164, 0.6);
+}
+
+.auth-tab-btn {
+  flex: 1;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  background: transparent;
+  color: var(--butter-ink);
+  transition: all 180ms ease;
+}
+
+.auth-tab-btn.active {
+  background: white;
+  color: #222936;
+  box-shadow: 0 4px 12px rgba(120, 83, 16, 0.1);
+}
+
+.auth-toggle-link {
+  display: block;
+  margin-top: 18px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--butter-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+}
+
+.auth-toggle-link span {
+  color: #b88915;
+  font-weight: 700;
+  text-decoration: underline;
+  margin-left: 5px;
+}
+
+body.dark .auth-tab-group {
+  background: rgba(0, 0, 0, 0.2);
+  border-color: var(--butter-border);
+}
+
+body.dark .auth-tab-btn {
+  color: #d4a72c;
+}
+
+body.dark .auth-tab-btn.active {
+  background: #3f321d;
+  color: #fffaf0;
+}
+
+body.dark .auth-toggle-link {
+  color: #e8ba3f;
+}
+
+body.dark .auth-toggle-link span {
+  color: #fbe58e;
 }
 
 body.dark .login-access-panel .login-card {

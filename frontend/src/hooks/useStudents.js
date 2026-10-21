@@ -4,6 +4,7 @@ import { getStudents } from "../services/studentService";
 export function useStudents(enabled) {
   const [students, setStudents] = useState([]);
   const [error, setError] = useState("");
+  const [isFetching, setIsFetching] = useState(false);
 
   const refreshStudents = useCallback(async () => {
     if (!enabled) {
@@ -11,12 +12,15 @@ export function useStudents(enabled) {
     }
 
     try {
+      setIsFetching(true);
       setError("");
       setStudents(await getStudents());
     } catch (requestError) {
       setError(
         requestError.response?.data?.message || "Unable to load students"
       );
+    } finally {
+      setIsFetching(false);
     }
   }, [enabled]);
 
@@ -50,6 +54,7 @@ export function useStudents(enabled) {
   return {
     students,
     setStudents,
+    loading: isFetching || (Boolean(enabled) && students.length === 0 && !error),
     refreshStudents,
     studentsError: error,
   };
