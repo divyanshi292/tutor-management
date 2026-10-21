@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { StatCard, StudentCard } from "../components";
 import {
   Area,
   AreaChart,
@@ -97,25 +98,33 @@ function DashboardHome({ students = [] }) {
 
       {/* Analytics Cards */}
       <div className="dashboard-stats">
-        <div className="stat-card">
-          <h3>Total Enrolled</h3>
-          <p>{totalStudents}</p>
-        </div>
-
-        <div className="stat-card">
-          <h3>Present Today</h3>
-          <p style={{ color: "#16a34a" }}>{presentStudents}</p>
-        </div>
-
-        <div className="stat-card">
-          <h3>Absent Today</h3>
-          <p style={{ color: "#dc2626" }}>{absentStudents}</p>
-        </div>
-
-        <div className="stat-card">
-          <h3>Pending Fees</h3>
-          <p style={{ color: "#d97706" }}>{pendingFees}</p>
-        </div>
+        <StatCard
+          title="Total Enrolled"
+          value={totalStudents}
+          icon="👥"
+          subtext="Active students"
+        />
+        <StatCard
+          title="Present Today"
+          value={presentStudents}
+          color="#16a34a"
+          icon="✅"
+          subtext="Checked in"
+        />
+        <StatCard
+          title="Absent Today"
+          value={absentStudents}
+          color="#dc2626"
+          icon="❌"
+          subtext="Unexcused / absent"
+        />
+        <StatCard
+          title="Pending Fees"
+          value={pendingFees}
+          color="#d97706"
+          icon="💰"
+          subtext="Awaiting payment"
+        />
       </div>
 
       {/* Interactive Charts Section */}
@@ -292,41 +301,11 @@ function DashboardHome({ students = [] }) {
             </p>
           ) : (
             students.slice(0, 4).map((student) => (
-              <div className="recent-card" key={student._id}>
-                <img src={student.image} alt={student.name} />
-                <h3>{student.name}</h3>
-                <p>Section: {student.section || "General"}</p>
-                <div style={{ marginTop: "8px", display: "flex", gap: "6px", flexWrap: "wrap" }}>
-                  <span
-                    className={
-                      student.status === "Present"
-                        ? "present-badge"
-                        : "absent-badge"
-                    }
-                    style={{ fontSize: "11px", padding: "3px 8px" }}
-                  >
-                    {student.status}
-                  </span>
-                  {student.feeStatus && (
-                    <span
-                      style={{
-                        fontSize: "11px",
-                        padding: "3px 8px",
-                        borderRadius: "8px",
-                        background:
-                          student.feeStatus === "Paid"
-                            ? "rgba(34, 197, 94, 0.15)"
-                            : "rgba(239, 68, 68, 0.15)",
-                        color:
-                          student.feeStatus === "Paid" ? "#16a34a" : "#dc2626",
-                        fontWeight: 600,
-                      }}
-                    >
-                      {student.feeStatus}
-                    </span>
-                  )}
-                </div>
-              </div>
+              <StudentCard
+                key={student._id}
+                student={student}
+                variant="compact"
+              />
             ))
           )}
         </div>

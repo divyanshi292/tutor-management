@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { FeedbackAlert, StudentCard } from "../components";
 import {
   createStudent,
   deleteStudent,
@@ -211,17 +211,11 @@ function Students({ students, refreshStudents }) {
       </div>
 
       {/* Feedback Alert */}
-      {feedback.text && (
-        <div
-          className={
-            feedback.type === "success"
-              ? "success-msg rounded-xl px-4 py-3 text-sm mb-6"
-              : "error-msg rounded-xl px-4 py-3 text-sm mb-6"
-          }
-        >
-          {feedback.text}
-        </div>
-      )}
+      <FeedbackAlert
+        type={feedback.type}
+        message={feedback.text}
+        onClose={() => setFeedback({ type: "", text: "" })}
+      />
 
       {/* Expandable Form */}
       {isFormOpen && (
@@ -474,101 +468,15 @@ function Students({ students, refreshStudents }) {
             No students found matching your criteria.
           </p>
         ) : (
-          filteredStudents.map((student) => {
-            const feeBg =
-              student.feeStatus === "Paid"
-                ? "rgba(34, 197, 94, 0.15)"
-                : student.feeStatus === "Overdue"
-                ? "rgba(239, 68, 68, 0.15)"
-                : "rgba(245, 158, 11, 0.15)";
-            const feeColor =
-              student.feeStatus === "Paid"
-                ? "#16a34a"
-                : student.feeStatus === "Overdue"
-                ? "#dc2626"
-                : "#d97706";
-
-            return (
-              <div className="student-card" key={student._id}>
-                <img
-                  src={student.image}
-                  alt={student.name}
-                  className="student-image"
-                />
-
-                <h3 style={{ fontSize: "18px", fontWeight: 700, margin: "0 0 6px 0" }}>
-                  {student.name}
-                </h3>
-
-                <p style={{ margin: "0 0 6px 0", color: "#64748b" }}>
-                  Section: <strong>{student.section || "General"}</strong>
-                </p>
-
-                <p style={{ margin: "0 0 10px 0" }}>
-                  Attendance: <strong>{student.attendance || "0%"}</strong>
-                </p>
-
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    gap: "8px",
-                    marginBottom: "16px",
-                  }}
-                >
-                  <span
-                    className={
-                      student.status === "Present"
-                        ? "present-badge"
-                        : "absent-badge"
-                    }
-                    style={{ margin: 0 }}
-                  >
-                    {student.status}
-                  </span>
-
-                  <span
-                    style={{
-                      padding: "6px 12px",
-                      borderRadius: "10px",
-                      background: feeBg,
-                      color: feeColor,
-                      fontSize: "12px",
-                      fontWeight: 700,
-                    }}
-                  >
-                    Fee: {student.feeStatus || "Paid"}
-                  </span>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="student-buttons">
-                  <Link
-                    to={`/dashboard/students/${student._id}`}
-                    className="view-btn"
-                  >
-                    View
-                  </Link>
-
-                  <button
-                    type="button"
-                    className="edit-student-btn"
-                    onClick={() => handleEdit(student)}
-                  >
-                    Edit
-                  </button>
-
-                  <button
-                    type="button"
-                    className="delete-btn"
-                    onClick={() => handleDelete(student)}
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-            );
-          })
+          filteredStudents.map((student) => (
+            <StudentCard
+              key={student._id}
+              student={student}
+              variant="full"
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
+          ))
         )}
       </div>
     </div>
