@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import studentAvatar from "../assets/student-avatar.svg";
 
 function StudentCard({
   student,
@@ -11,22 +12,22 @@ function StudentCard({
   const feeStatus = student.feeStatus || "Paid";
   const feeBg =
     feeStatus === "Paid"
-      ? "rgba(34, 197, 94, 0.15)"
+      ? "rgba(16, 185, 129, 0.12)"
       : feeStatus === "Overdue"
-      ? "rgba(239, 68, 68, 0.15)"
-      : "rgba(245, 158, 11, 0.15)";
+      ? "rgba(244, 63, 94, 0.14)"
+      : "rgba(245, 158, 11, 0.14)";
   const feeColor =
     feeStatus === "Paid"
-      ? "#16a34a"
+      ? "#059669"
       : feeStatus === "Overdue"
-      ? "#dc2626"
+      ? "#e11d48"
       : "#d97706";
 
   if (isCompact) {
     return (
       <div className="recent-card">
         <img
-          src={student.image || "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"}
+          src={student.image || studentAvatar}
           alt={student.name}
         />
         <h3>{student.name}</h3>
@@ -62,7 +63,7 @@ function StudentCard({
   return (
     <div className="student-card">
       <img
-        src={student.image || "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"}
+        src={student.image || studentAvatar}
         alt={student.name}
         className="student-image"
       />

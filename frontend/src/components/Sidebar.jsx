@@ -1,4 +1,6 @@
 import { NavLink } from "react-router-dom";
+import logoImage from "../assets/logo.png";
+import tutorAvatar from "../assets/tutor-avatar.svg";
 
 function Sidebar({ user, menuOpen, onClose, onLogout }) {
   return (
@@ -6,10 +8,25 @@ function Sidebar({ user, menuOpen, onClose, onLogout }) {
       className={menuOpen ? "dashboard-sidebar active" : "dashboard-sidebar"}
       aria-label="Tutor navigation sidebar"
     >
+      {/* Brand Header */}
+      <div className="sidebar-brand-row">
+        <img
+          src={logoImage}
+          alt="TutorDesk logo"
+          className="sidebar-brand-logo"
+        />
+        <div>
+          <h2 className="sidebar-brand-title">
+            Tutor<span>Desk</span>
+          </h2>
+          <span className="sidebar-brand-subtitle">Tutor Management</span>
+        </div>
+      </div>
+
       {/* Profile summary */}
       <div className="sidebar-profile">
         <img
-          src="https://cdn-icons-png.flaticon.com/512/6997/6997662.png"
+          src={user?.avatar || tutorAvatar}
           alt={user?.name ? `${user.name} avatar` : "Tutor avatar"}
           className="sidebar-avatar"
         />
@@ -66,7 +83,6 @@ function Sidebar({ user, menuOpen, onClose, onLogout }) {
         type="button"
         className="logout-sidebar-btn"
         onClick={onLogout}
-        style={{ marginTop: "auto" }}
       >
         Logout
       </button>

@@ -11,10 +11,10 @@ function FeedbackAlert({ type, message, onClose }) {
         borderRadius: "12px",
         marginBottom: "20px",
         background: isSuccess
-          ? "rgba(34, 197, 94, 0.15)"
-          : "rgba(239, 68, 68, 0.15)",
-        border: `1px solid ${isSuccess ? "#86efac" : "#fca5a5"}`,
-        color: isSuccess ? "#166534" : "#991b1b",
+          ? "rgba(16, 185, 129, 0.12)"
+          : "rgba(244, 63, 94, 0.12)",
+        border: `1px solid ${isSuccess ? "#a7f3d0" : "#fecdd3"}`,
+        color: isSuccess ? "#065f46" : "#be123c",
         fontSize: "14px",
         fontWeight: 600,
         display: "flex",

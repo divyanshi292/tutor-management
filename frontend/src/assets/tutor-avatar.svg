@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" fill="none">
+  <defs>
+    <linearGradient id="tutorBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fffbeb" />
+      <stop offset="35%" stop-color="#fef08a" />
+      <stop offset="80%" stop-color="#fbcfe8" />
+      <stop offset="100%" stop-color="#fb7185" />
+    </linearGradient>
+    <linearGradient id="tutorFigure" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3b1d2e" />
+      <stop offset="100%" stop-color="#22111c" />
+    </linearGradient>
+    <linearGradient id="tutorCap" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fb7185" />
+      <stop offset="100%" stop-color="#f43f5e" />
+    </linearGradient>
+    <linearGradient id="tutorGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="100%" stop-color="#f59e0b" />
+    </linearGradient>
+    <clipPath id="tutorClip">
+      <circle cx="60" cy="60" r="56" />
+    </clipPath>
+  </defs>
+
+  <!-- Background Base -->
+  <circle cx="60" cy="60" r="58" fill="url(#tutorBg)" />
+  <circle cx="60" cy="60" r="56" fill="#fffdf5" opacity="0.88" />
+
+  <!-- Themed Silhouette & Educator Accents -->
+  <g clip-path="url(#tutorClip)">
+    <!-- Gender-neutral Torso -->
+    <path d="M22 112 C22 88, 38 74, 60 74 C82 74, 98 88, 98 112 Z" fill="url(#tutorFigure)" />
+
+    <!-- Educator Collar / Stole in Theme Pink -->
+    <path d="M50 74 L60 88 L70 74 Z" fill="url(#tutorCap)" />
+    <path d="M56 74 L60 82 L64 74 Z" fill="#fffdf5" />
+
+    <!-- Gender-neutral Head -->
+    <circle cx="60" cy="50" r="17" fill="url(#tutorFigure)" />
+
+    <!-- Graduation / Educator Cap -->
+    <!-- Mortarboard Diamond -->
+    <polygon points="60,20 88,31 60,40 32,31" fill="url(#tutorCap)" />
+    <!-- Cap skull base -->
+    <path d="M42 35 Q60 41 78 35 L78 39 Q60 46 42 39 Z" fill="#e11d48" />
+    <!-- Golden Tassel -->
+    <path d="M60 31 C72 32, 77 38, 79 46" stroke="url(#tutorGold)" stroke-width="2.5" fill="none" stroke-linecap="round" />
+    <circle cx="79" cy="48" r="2.5" fill="url(#tutorGold)" />
+    <circle cx="60" cy="31" r="2" fill="url(#tutorGold)" />
+  </g>
+
+  <!-- Outer Ring Accent -->
+  <circle cx="60" cy="60" r="56" stroke="url(#tutorCap)" stroke-width="2" opacity="0.4" />
+</svg>

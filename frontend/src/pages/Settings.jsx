@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FeedbackAlert } from "../components";
 import { useTheme } from "../hooks/useTheme";
 
 const getInitialFormData = (user) => ({
@@ -79,17 +80,11 @@ const Settings = ({ user, updateUserProfile }) => {
       <div className="settings-card">
         <h1>Tutor Settings</h1>
 
-        {feedback.text && (
-          <div
-            className={
-              feedback.type === "success"
-                ? "success-msg rounded-xl px-4 py-3 text-sm mb-4"
-                : "error-msg rounded-xl px-4 py-3 text-sm mb-4"
-            }
-          >
-            {feedback.text}
-          </div>
-        )}
+        <FeedbackAlert
+          type={feedback.type}
+          message={feedback.text}
+          onClose={() => setFeedback({ type: "", text: "" })}
+        />
 
         <form onSubmit={handleSave}>
           {/* ================= PROFILE INFORMATION ================= */}

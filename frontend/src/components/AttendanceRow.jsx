@@ -1,10 +1,12 @@
+import studentAvatar from "../assets/student-avatar.svg";
+
 function AttendanceRow({ student, currentStatus = "Present", onStatusChange }) {
   return (
     <div className="attendance-card" key={student._id}>
       {/* Student Info */}
       <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
         <img
-          src={student.image || "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"}
+          src={student.image || studentAvatar}
           alt={student.name}
           style={{
             width: "48px",

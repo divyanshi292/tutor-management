@@ -18,10 +18,10 @@ import { useAuth } from "../hooks/useAuth";
 import { getAttendanceStats } from "../services/attendanceService";
 
 const PIE_COLORS = {
-  Present: "#22c55e",
-  Absent: "#ef4444",
+  Present: "#10b981",
+  Absent: "#f43f5e",
   Late: "#f59e0b",
-  Unmarked: "#94a3b8",
+  Unmarked: "#cbd5e1",
 };
 
 function DashboardHome({ students = [] }) {
@@ -107,21 +107,21 @@ function DashboardHome({ students = [] }) {
         <StatCard
           title="Present Today"
           value={presentStudents}
-          color="#16a34a"
+          color="#10b981"
           icon="✅"
           subtext="Checked in"
         />
         <StatCard
           title="Absent Today"
           value={absentStudents}
-          color="#dc2626"
+          color="#f43f5e"
           icon="❌"
           subtext="Unexcused / absent"
         />
         <StatCard
           title="Pending Fees"
           value={pendingFees}
-          color="#d97706"
+          color="#f59e0b"
           icon="💰"
           subtext="Awaiting payment"
         />
@@ -141,18 +141,18 @@ function DashboardHome({ students = [] }) {
         <div
           className="chart-card"
           style={{
-            background: "var(--butter-surface, #fffdf7)",
-            border: "1px solid rgba(241, 223, 164, 0.7)",
+            background: "linear-gradient(145deg, #ffffff 0%, #fffbfc 100%)",
+            border: "1px solid rgba(251, 113, 133, 0.22)",
             borderRadius: "18px",
             padding: "24px",
-            boxShadow: "0 8px 24px rgba(120, 83, 16, 0.06)",
+            boxShadow: "0 10px 26px rgba(244, 63, 94, 0.06), 0 3px 10px rgba(245, 158, 11, 0.04)",
           }}
         >
           <div style={{ marginBottom: "16px" }}>
-            <h3 style={{ fontSize: "18px", fontWeight: 700, color: "#222936" }}>
+            <h3 style={{ fontSize: "18px", fontWeight: 700, color: "var(--butter-ink)" }}>
               Weekly Attendance Trends
             </h3>
-            <p style={{ fontSize: "13px", color: "var(--butter-muted, #776846)" }}>
+            <p style={{ fontSize: "13px", color: "var(--butter-muted)" }}>
               Daily student presence over the past 7 days
             </p>
           </div>
@@ -162,23 +162,23 @@ function DashboardHome({ students = [] }) {
               <AreaChart data={trendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorPresent" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#22c55e" stopOpacity={0.4} />
-                    <stop offset="95%" stopColor="#22c55e" stopOpacity={0.0} />
+                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.4} />
+                    <stop offset="95%" stopColor="#10b981" stopOpacity={0.0} />
                   </linearGradient>
                   <linearGradient id="colorAbsent" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#ef4444" stopOpacity={0.4} />
-                    <stop offset="95%" stopColor="#ef4444" stopOpacity={0.0} />
+                    <stop offset="5%" stopColor="#f43f5e" stopOpacity={0.4} />
+                    <stop offset="95%" stopColor="#f43f5e" stopOpacity={0.0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f1dfa4" opacity={0.4} />
-                <XAxis dataKey="day" stroke="#888" fontSize={12} tickLine={false} />
-                <YAxis stroke="#888" fontSize={12} allowDecimals={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#fce7f3" opacity={0.6} />
+                <XAxis dataKey="day" stroke="#a18897" fontSize={12} tickLine={false} />
+                <YAxis stroke="#a18897" fontSize={12} allowDecimals={false} />
                 <Tooltip
                   contentStyle={{
                     background: "rgba(255, 255, 255, 0.96)",
                     borderRadius: "12px",
-                    border: "1px solid #f1dfa4",
-                    boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                    border: "1px solid #fce7f3",
+                    boxShadow: "0 6px 18px rgba(244, 63, 94, 0.1)",
                   }}
                 />
                 <Legend iconType="circle" wrapperStyle={{ fontSize: "13px" }} />
@@ -186,7 +186,7 @@ function DashboardHome({ students = [] }) {
                   type="monotone"
                   dataKey="present"
                   name="Present"
-                  stroke="#22c55e"
+                  stroke="#10b981"
                   strokeWidth={2}
                   fillOpacity={1}
                   fill="url(#colorPresent)"
@@ -195,7 +195,7 @@ function DashboardHome({ students = [] }) {
                   type="monotone"
                   dataKey="absent"
                   name="Absent"
-                  stroke="#ef4444"
+                  stroke="#f43f5e"
                   strokeWidth={2}
                   fillOpacity={1}
                   fill="url(#colorAbsent)"
@@ -209,18 +209,18 @@ function DashboardHome({ students = [] }) {
         <div
           className="chart-card"
           style={{
-            background: "var(--butter-surface, #fffdf7)",
-            border: "1px solid rgba(241, 223, 164, 0.7)",
+            background: "linear-gradient(145deg, #ffffff 0%, #fffbfc 100%)",
+            border: "1px solid rgba(251, 113, 133, 0.22)",
             borderRadius: "18px",
             padding: "24px",
-            boxShadow: "0 8px 24px rgba(120, 83, 16, 0.06)",
+            boxShadow: "0 10px 26px rgba(244, 63, 94, 0.06), 0 3px 10px rgba(245, 158, 11, 0.04)",
           }}
         >
           <div style={{ marginBottom: "16px" }}>
-            <h3 style={{ fontSize: "18px", fontWeight: 700, color: "#222936" }}>
+            <h3 style={{ fontSize: "18px", fontWeight: 700, color: "var(--butter-ink)" }}>
               Today&apos;s Attendance Status
             </h3>
-            <p style={{ fontSize: "13px", color: "var(--butter-muted, #776846)" }}>
+            <p style={{ fontSize: "13px", color: "var(--butter-muted)" }}>
               Distribution of student presence today
             </p>
           </div>

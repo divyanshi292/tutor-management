@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import tutorAvatar from "../assets/tutor-avatar.svg";
 
 const Profile = ({ user, students }) => {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ const Profile = ({ user, students }) => {
         {/* Header Section */}
         <div className="profile-header">
           <img
-            src="https://cdn-icons-png.flaticon.com/512/6997/6997662.png"
+            src={user?.avatar || tutorAvatar}
             alt="Tutor avatar"
             className="profile-image"
           />

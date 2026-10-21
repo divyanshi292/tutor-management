@@ -193,13 +193,14 @@ function Students({ students, refreshStudents }) {
           type="button"
           className="action-btn"
           style={{
-            background: isFormOpen ? "#64748b" : "linear-gradient(90deg, #d4a72c, #e8ba3f)",
-            color: isFormOpen ? "white" : "#2f2919",
+            background: isFormOpen ? "#64748b" : "var(--brand-gradient)",
+            color: "white",
             fontWeight: 700,
             padding: "10px 20px",
             borderRadius: "12px",
             border: "none",
             cursor: "pointer",
+            boxShadow: isFormOpen ? "none" : "0 6px 18px rgba(244, 63, 94, 0.25)",
           }}
           onClick={() => {
             if (isFormOpen && editId !== null) cancelEdit();
@@ -226,14 +227,16 @@ function Students({ students, refreshStudents }) {
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
             gap: "14px",
-            border: "1px solid rgba(241, 223, 164, 0.8)",
-            borderRadius: "16px",
+            border: "1px solid rgba(251, 113, 133, 0.28)",
+            borderRadius: "18px",
             padding: "24px",
             marginBottom: "32px",
+            background: "linear-gradient(145deg, #ffffff 0%, #fffbfc 100%)",
+            boxShadow: "0 10px 28px rgba(244, 63, 94, 0.06)",
           }}
         >
           <div style={{ gridColumn: "1 / -1", marginBottom: "4px" }}>
-            <h3 style={{ fontSize: "18px", fontWeight: 700, color: "#222936" }}>
+            <h3 style={{ fontSize: "18px", fontWeight: 700, color: "var(--butter-ink)" }}>
               {editId !== null ? "Edit Student Details" : "Enroll New Student"}
             </h3>
           </div>
@@ -359,12 +362,13 @@ function Students({ students, refreshStudents }) {
               disabled={submitting}
               style={{
                 padding: "10px 24px",
-                background: "linear-gradient(90deg, #d4a72c, #e8ba3f)",
-                color: "#2f2919",
+                background: "var(--brand-gradient)",
+                color: "white",
                 fontWeight: 700,
-                borderRadius: "8px",
+                borderRadius: "10px",
                 border: "none",
                 cursor: "pointer",
+                boxShadow: "0 6px 18px rgba(244, 63, 94, 0.25)",
               }}
             >
               {submitting
@@ -380,11 +384,11 @@ function Students({ students, refreshStudents }) {
                 onClick={cancelEdit}
                 style={{
                   padding: "10px 20px",
-                  background: "#e2e8f0",
-                  color: "#334155",
+                  background: "#fff5f8",
+                  color: "#e11d48",
                   fontWeight: 600,
-                  borderRadius: "8px",
-                  border: "none",
+                  borderRadius: "10px",
+                  border: "1px solid rgba(251, 113, 133, 0.4)",
                   cursor: "pointer",
                 }}
               >

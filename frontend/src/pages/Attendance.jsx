@@ -250,14 +250,15 @@ function Attendance({ students = [], setStudents }) {
             type="button"
             onClick={() => handleBatchMark("Present")}
             style={{
-              padding: "8px 14px",
-              background: "#22c55e",
+              padding: "9px 16px",
+              background: "#10b981",
               color: "white",
               border: "none",
-              borderRadius: "8px",
-              fontWeight: 600,
+              borderRadius: "10px",
+              fontWeight: 700,
               fontSize: "13px",
               cursor: "pointer",
+              boxShadow: "0 4px 12px rgba(16, 185, 129, 0.25)",
             }}
           >
             ✓ Mark All Present
@@ -266,14 +267,15 @@ function Attendance({ students = [], setStudents }) {
             type="button"
             onClick={() => handleBatchMark("Absent")}
             style={{
-              padding: "8px 14px",
-              background: "#ef4444",
+              padding: "9px 16px",
+              background: "linear-gradient(135deg, #fb7185, #f43f5e)",
               color: "white",
               border: "none",
-              borderRadius: "8px",
-              fontWeight: 600,
+              borderRadius: "10px",
+              fontWeight: 700,
               fontSize: "13px",
               cursor: "pointer",
+              boxShadow: "0 4px 12px rgba(244, 63, 94, 0.25)",
             }}
           >
             ✕ Mark All Absent

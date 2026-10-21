@@ -1,4 +1,5 @@
 import { Link, useParams } from "react-router-dom";
+import studentAvatar from "../assets/student-avatar.svg";
 
 function StudentDetails({ students, loading }) {
   const { id } = useParams();
@@ -97,7 +98,7 @@ function StudentDetails({ students, loading }) {
         {/* Header */}
         <div className="details-header">
           <img
-            src={student.image}
+            src={student.image || studentAvatar}
             alt={student.name}
             className="details-image"
           />
@@ -184,22 +185,22 @@ function StudentDetails({ students, loading }) {
             style={{
               margin: "24px 0",
               padding: "18px",
-              borderRadius: "12px",
-              background: "var(--butter-soft, #fff3c4)",
-              border: "1px solid rgba(241, 223, 164, 0.8)",
+              borderRadius: "14px",
+              background: "linear-gradient(135deg, #fff9db 0%, #fff0f5 100%)",
+              border: "1px solid rgba(251, 113, 133, 0.3)",
             }}
           >
             <h3
               style={{
                 fontSize: "15px",
                 fontWeight: 700,
-                color: "#2f2919",
+                color: "var(--butter-ink)",
                 marginBottom: "6px",
               }}
             >
               Teacher Notes & Remarks
             </h3>
-            <p style={{ fontSize: "14px", color: "#4b3711", lineHeight: 1.5 }}>
+            <p style={{ fontSize: "14px", color: "var(--butter-muted)", lineHeight: 1.5 }}>
               {student.notes}
             </p>
           </div>
@@ -229,7 +230,16 @@ function StudentDetails({ students, loading }) {
           <Link to="/dashboard/attendance" className="action-btn">
             Log Attendance Session
           </Link>
-          <Link to="/dashboard/students" className="action-btn" style={{ background: "#e2e8f0", color: "#334155" }}>
+          <Link
+            to="/dashboard/students"
+            className="action-btn"
+            style={{
+              background: "#fff5f8",
+              color: "#e11d48",
+              border: "1px solid rgba(251, 113, 133, 0.4)",
+              boxShadow: "none",
+            }}
+          >
             Return to List
           </Link>
         </div>
